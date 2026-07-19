@@ -4,7 +4,7 @@ export const PORTFOLIO_DATA = {
     shortName: "Farhan",
     role: "Mahasiswa Sistem Informasi | Web Developer | IT Project Manager",
     description: "Membangun solusi web yang efisien dengan ekosistem Laravel dan merancang arsitektur database yang solid, dikombinasikan dengan keterampilan manajemen proyek TI.",
-    email: "farhan@gmail.com",
+    email: "04102002farhan@gmail.com",
     phone: "+62 85773299060",
     location: "Jakarta Utara, DKI Jakarta, 14420",
     linkedin: "https://linkedin.com/in/mfarhannurhidayat",
