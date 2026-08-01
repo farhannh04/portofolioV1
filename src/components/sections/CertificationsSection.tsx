@@ -4,7 +4,7 @@ import { useState } from "react";
 import dynamic from "next/dynamic";
 import { motion } from "framer-motion";
 import { PORTFOLIO_DATA } from "@/data/portfolio";
-import { Award, Eye } from "lucide-react";
+import { Award, Eye, Calendar } from "lucide-react";
 
 const CertificateModal = dynamic(
   () => import("@/components/shared/CertificateModal"),
@@ -14,90 +14,120 @@ const CertificateModal = dynamic(
 export default function CertificationsSection() {
   const { certifications } = PORTFOLIO_DATA;
   const [selectedCert, setSelectedCert] = useState<(typeof certifications)[0] | null>(null);
-
-  const openModal = (cert: (typeof certifications)[0]) => {
-    setSelectedCert(cert);
-    document.body.style.overflow = "hidden";
-  };
-
-  const closeModal = () => {
-    setSelectedCert(null);
-    document.body.style.overflow = "unset";
-  };
-
-  const containerVariants = {
-    hidden: { opacity: 0 },
-    visible: {
-      opacity: 1,
-      transition: { staggerChildren: 0.15 },
-    },
-  };
-
-  const cardVariants = {
-    hidden: { opacity: 0, y: 30 },
-    visible: { opacity: 1, y: 0, transition: { duration: 0.5 } },
-  };
+  const [hoveredId, setHoveredId] = useState<number | null>(null);
 
   return (
     <>
-      <section id="certifications" className="py-24 relative z-10">
-        <div className="container mx-auto px-4 md:px-6 relative z-10">
-          <div className="text-center mb-16">
-            <div className="inline-block rounded-lg bg-blue-600 px-3 py-1 text-sm font-semibold text-white shadow-sm mb-4">
-              Pencapaian
-            </div>
-            <h2 className="text-3xl md:text-4xl font-bold tracking-tight">
-              Sertifikasi & Pelatihan
-            </h2>
-          </div>
+      <section id="certifications" className="py-24 relative overflow-hidden">
+        <div className="absolute inset-0">
+          <div className="absolute top-1/3 left-1/4 w-72 h-72 bg-blue-500/5 rounded-full blur-3xl" />
+          <div className="absolute bottom-1/3 right-1/4 w-72 h-72 bg-purple-500/5 rounded-full blur-3xl" />
+        </div>
 
+        <div className="container mx-auto px-4 md:px-6 relative z-10">
           <motion.div
-            className="grid grid-cols-1 md:grid-cols-12 gap-6 max-w-5xl mx-auto"
-            variants={containerVariants}
-            initial="hidden"
-            whileInView="visible"
-            viewport={{ once: true, margin: "-50px" }}
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.6 }}
+            className="text-center mb-16"
           >
-            {certifications.map((cert: any, index: number) => (
-              <motion.div
-                key={cert.id}
-                variants={cardVariants}
-                onClick={() => openModal(cert)}
-                className={`group relative z-10 p-6 md:p-8 rounded-3xl bg-card border border-border shadow-sm cursor-pointer transition-all duration-300 hover:shadow-xl hover:-translate-y-2 hover:border-blue-500/50 flex flex-col ${
-                  index === 0 || index === 3 ? "md:col-span-7" : "md:col-span-5"
-                }`}
-              >
-                <div className="flex justify-between items-start mb-4">
-                  <div className="p-3 rounded-lg bg-blue-500/10 text-blue-600 group-hover:bg-blue-600 group-hover:text-white transition-colors">
-                    <Award className="w-6 h-6" />
-                  </div>
-                  <span className="text-xs font-medium text-slate-600 bg-slate-100 px-2 py-1 rounded">
-                    {cert.date}
-                  </span>
-                </div>
-                <h4 className="font-bold text-xl leading-tight mb-3 text-slate-900 group-hover:text-blue-600 transition-colors">
-                  {cert.title}
-                </h4>
-                <p className="text-sm text-slate-600 mb-6 flex-grow">
-                  {cert.issuer}
-                </p>
-                <div className="flex items-center justify-between mt-auto pt-4 border-t border-slate-100">
-                  <div className="text-sm font-semibold text-slate-800">
-                    <span className="font-normal text-slate-500 mr-1">Hasil:</span>{cert.role}
-                  </div>
-                  <div className="flex items-center gap-1 text-sm font-semibold text-blue-600 opacity-0 transform translate-x-2 group-hover:opacity-100 group-hover:translate-x-0 transition-all duration-300">
-                    <Eye className="w-4 h-4" />
-                    Lihat Dokumen
-                  </div>
-                </div>
-              </motion.div>
-            ))}
+            <motion.div
+              initial={{ opacity: 0, scale: 0.9 }}
+              whileInView={{ opacity: 1, scale: 1 }}
+              viewport={{ once: true }}
+              transition={{ delay: 0.1 }}
+              className="inline-flex items-center gap-2 px-4 py-1.5 bg-blue-500/10 border border-blue-500/30 rounded-full text-blue-400 text-xs font-medium mb-4"
+            >
+              <Award className="w-3.5 h-3.5" />
+              Pencapaian
+            </motion.div>
+            <h2 className="text-3xl md:text-4xl font-bold tracking-tight">
+              <span className="bg-gradient-to-r from-foreground to-foreground/60 bg-clip-text text-transparent">
+                Sertifikasi & Pelatihan
+              </span>
+            </h2>
           </motion.div>
+
+          <div className="max-w-4xl mx-auto space-y-4">
+            {certifications.map((cert: (typeof certifications)[0], index: number) => {
+              const isHovered = hoveredId === cert.id;
+
+              return (
+                <motion.div
+                  key={cert.id}
+                  initial={{ opacity: 0, y: 20 }}
+                  whileInView={{ opacity: 1, y: 0 }}
+                  viewport={{ once: true, margin: "-50px" }}
+                  transition={{ delay: index * 0.1, duration: 0.5 }}
+                  onMouseEnter={() => setHoveredId(cert.id)}
+                  onMouseLeave={() => setHoveredId(null)}
+                  onClick={() => setSelectedCert(cert)}
+                  className="group cursor-pointer"
+                >
+                  <motion.div
+                    className="relative p-6 bg-gray-900/60 backdrop-blur-sm border border-white/5 rounded-xl overflow-hidden"
+                    animate={{
+                      borderColor: isHovered ? "rgba(59,130,246,0.3)" : "rgba(255,255,255,0.05)",
+                      y: isHovered ? -3 : 0,
+                    }}
+                    transition={{ duration: 0.2 }}
+                  >
+                    <motion.div
+                      className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-500"
+                      style={{ background: "radial-gradient(circle at left, rgba(59,130,246,0.05), transparent 70%)" }}
+                    />
+
+                    <div className="relative flex flex-col md:flex-row md:items-center gap-4">
+                      <motion.div
+                        className="flex-shrink-0 w-12 h-12 rounded-lg flex items-center justify-center"
+                        style={{
+                          backgroundColor: isHovered ? "rgba(59,130,246,0.2)" : "rgba(59,130,246,0.1)",
+                          color: "#60a5fa",
+                        }}
+                        animate={{ scale: isHovered ? 1.05 : 1 }}
+                        transition={{ duration: 0.2 }}
+                      >
+                        <Award className="w-5 h-5" />
+                      </motion.div>
+
+                      <div className="flex-1 min-w-0">
+                        <h4 className="font-semibold text-foreground group-hover:text-blue-400 transition-colors mb-1 leading-tight">
+                          {cert.title}
+                        </h4>
+                        <p className="text-sm text-foreground/50">{cert.issuer}</p>
+                      </div>
+
+                      <div className="flex items-center gap-4 md:flex-shrink-0">
+                        <div className="flex items-center gap-1.5 text-xs text-foreground/40">
+                          <Calendar className="w-3.5 h-3.5" />
+                          <span className="font-mono">{cert.date}</span>
+                        </div>
+
+                        <span className="px-2.5 py-1 text-xs font-bold rounded-md bg-blue-500/10 text-blue-400 border border-blue-500/20">
+                          {cert.role}
+                        </span>
+
+                        <motion.div
+                          className="flex items-center gap-1 text-xs text-blue-400"
+                          animate={{ opacity: isHovered ? 1 : 0, x: isHovered ? 0 : 10 }}
+                          transition={{ duration: 0.2 }}
+                        >
+                          <Eye className="w-3.5 h-3.5" />
+                          <span className="hidden sm:inline">Lihat</span>
+                        </motion.div>
+                      </div>
+                    </div>
+                  </motion.div>
+                </motion.div>
+              );
+            })}
+          </div>
         </div>
       </section>
 
       {selectedCert && (
-        <CertificateModal key={selectedCert.id} cert={selectedCert} onClose={closeModal} />
+        <CertificateModal key={selectedCert.id} cert={selectedCert} onClose={() => setSelectedCert(null)} />
       )}
     </>
   );

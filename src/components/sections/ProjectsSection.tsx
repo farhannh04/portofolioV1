@@ -26,6 +26,107 @@ const LANGUAGE_COLORS: Record<string, string> = {
   Blade: "#f7523f",
 };
 
+function RepoCard({ repo, index }: { repo: GitHubRepo; index: number }) {
+  const [hovered, setHovered] = useState(false);
+  const langColor = LANGUAGE_COLORS[repo.language || ""] || "#6b7280";
+
+  return (
+    <motion.a
+      href={repo.html_url}
+      target="_blank"
+      rel="noopener noreferrer"
+      initial={{ opacity: 0, y: 20 }}
+      whileInView={{ opacity: 1, y: 0 }}
+      viewport={{ once: true, margin: "-50px" }}
+      transition={{ delay: index * 0.05, duration: 0.5 }}
+      onMouseEnter={() => setHovered(true)}
+      onMouseLeave={() => setHovered(false)}
+      className="group block"
+    >
+      <motion.div
+        className="relative h-full p-5 bg-gray-900/60 backdrop-blur-sm border border-white/5 rounded-xl overflow-hidden flex flex-col"
+        animate={{
+          borderColor: hovered ? `${langColor}40` : "rgba(255,255,255,0.05)",
+          y: hovered ? -4 : 0,
+        }}
+        transition={{ duration: 0.2 }}
+      >
+        <motion.div
+          className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-500"
+          style={{ background: `radial-gradient(circle at top left, ${langColor}08, transparent 70%)` }}
+        />
+
+        <div className="relative flex flex-col h-full">
+          <div className="flex justify-between items-start mb-3">
+            <motion.div
+              className="p-2 rounded-lg"
+              style={{
+                backgroundColor: hovered ? `${langColor}20` : "rgba(59,130,246,0.1)",
+                color: hovered ? langColor : "#60a5fa",
+              }}
+              animate={{ scale: hovered ? 1.05 : 1 }}
+              transition={{ duration: 0.2 }}
+            >
+              <FolderGit2 className="w-4 h-4" />
+            </motion.div>
+            <motion.div
+              animate={{ opacity: hovered ? 1 : 0, x: hovered ? 0 : 5 }}
+              transition={{ duration: 0.2 }}
+            >
+              <ExternalLink className="w-3.5 h-3.5 text-foreground/40" />
+            </motion.div>
+          </div>
+
+          <h4 className="font-semibold text-sm text-foreground group-hover:text-blue-400 transition-colors mb-1.5 leading-tight">
+            {repo.name}
+          </h4>
+
+          <p className="text-xs text-foreground/40 mb-4 flex-grow line-clamp-2">
+            {repo.description || "Tidak ada deskripsi"}
+          </p>
+
+          {repo.topics.length > 0 && (
+            <div className="flex flex-wrap gap-1 mb-3">
+              {repo.topics.slice(0, 3).map((topic) => (
+                <span
+                  key={topic}
+                  className="text-[10px] font-medium text-blue-400 bg-blue-500/10 px-2 py-0.5 rounded-full border border-blue-500/20"
+                >
+                  {topic}
+                </span>
+              ))}
+            </div>
+          )}
+
+          <div className="flex items-center gap-3 pt-3 border-t border-white/5">
+            {repo.language && (
+              <div className="flex items-center gap-1.5">
+                <span
+                  className="w-2.5 h-2.5 rounded-full"
+                  style={{ backgroundColor: langColor }}
+                />
+                <span className="text-[11px] text-foreground/50">{repo.language}</span>
+              </div>
+            )}
+            {repo.stargazers_count > 0 && (
+              <div className="flex items-center gap-1 text-[11px] text-foreground/40">
+                <Star className="w-3 h-3" />
+                {repo.stargazers_count}
+              </div>
+            )}
+            {repo.forks_count > 0 && (
+              <div className="flex items-center gap-1 text-[11px] text-foreground/40">
+                <GitFork className="w-3 h-3" />
+                {repo.forks_count}
+              </div>
+            )}
+          </div>
+        </div>
+      </motion.div>
+    </motion.a>
+  );
+}
+
 export default function ProjectsSection() {
   const [repos, setRepos] = useState<GitHubRepo[]>([]);
   const [loading, setLoading] = useState(true);
@@ -48,167 +149,100 @@ export default function ProjectsSection() {
       });
   }, []);
 
-  const containerVariants = {
-    hidden: { opacity: 0 },
-    visible: {
-      opacity: 1,
-      transition: { staggerChildren: 0.1 },
-    },
-  };
-
-  const cardVariants = {
-    hidden: { opacity: 0, y: 30 },
-    visible: { opacity: 1, y: 0, transition: { duration: 0.5 } },
-  };
-
   const displayed = showAll ? repos : repos.slice(0, 6);
 
   return (
-    <section id="projects" className="py-24 relative z-10">
+    <section id="projects" className="py-24 relative overflow-hidden">
+      <div className="absolute inset-0">
+        <div className="absolute top-1/3 right-1/4 w-72 h-72 bg-blue-500/5 rounded-full blur-3xl" />
+        <div className="absolute bottom-1/3 left-1/4 w-72 h-72 bg-purple-500/5 rounded-full blur-3xl" />
+      </div>
+
       <div className="container mx-auto px-4 md:px-6 relative z-10">
-        <div className="text-center mb-16">
-          <div className="inline-block rounded-lg bg-blue-600 px-3 py-1 text-sm font-semibold text-white shadow-sm mb-4">
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true }}
+          transition={{ duration: 0.6 }}
+          className="text-center mb-16"
+        >
+          <motion.div
+            initial={{ opacity: 0, scale: 0.9 }}
+            whileInView={{ opacity: 1, scale: 1 }}
+            viewport={{ once: true }}
+            transition={{ delay: 0.1 }}
+            className="inline-flex items-center gap-2 px-4 py-1.5 bg-blue-500/10 border border-blue-500/30 rounded-full text-blue-400 text-xs font-medium mb-4"
+          >
+            <FolderGit2 className="w-3.5 h-3.5" />
             Portofolio
-          </div>
+          </motion.div>
           <h2 className="text-3xl md:text-4xl font-bold tracking-tight">
-            Proyek GitHub
+            <span className="bg-gradient-to-r from-foreground to-foreground/60 bg-clip-text text-transparent">
+              Proyek GitHub
+            </span>
           </h2>
-          <p className="text-slate-600 mt-3 max-w-2xl mx-auto">
+          <p className="text-sm text-foreground/50 mt-3 max-w-md mx-auto">
             Koleksi proyek yang telah saya kerjakan dan publikasikan di GitHub
           </p>
-        </div>
+        </motion.div>
 
         {loading && (
           <div className="flex flex-col items-center justify-center py-20 gap-3">
-            <Loader2 className="w-8 h-8 animate-spin text-blue-600" />
-            <p className="text-sm text-slate-600">Memuat proyek...</p>
+            <Loader2 className="w-6 h-6 animate-spin text-blue-400" />
+            <p className="text-sm text-foreground/50">Memuat proyek...</p>
           </div>
         )}
 
         {error && (
           <div className="flex flex-col items-center justify-center py-20 gap-3">
-            <AlertCircle className="w-8 h-8 text-red-500" />
-            <p className="text-sm text-slate-600">
-              Gagal memuat proyek. Silakan coba lagi nanti.
-            </p>
+            <AlertCircle className="w-6 h-6 text-red-400" />
+            <p className="text-sm text-foreground/50">Gagal memuat proyek. Silakan coba lagi nanti.</p>
           </div>
         )}
 
         {!loading && !error && repos.length === 0 && (
           <div className="flex flex-col items-center justify-center py-20 gap-3">
-            <FolderGit2 className="w-8 h-8 text-slate-400" />
-            <p className="text-sm text-slate-600">Belum ada proyek.</p>
+            <FolderGit2 className="w-6 h-6 text-foreground/30" />
+            <p className="text-sm text-foreground/50">Belum ada proyek.</p>
           </div>
         )}
 
         {!loading && !error && repos.length > 0 && (
           <>
-            <motion.div
-              className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 max-w-6xl mx-auto"
-              variants={containerVariants}
-              initial="hidden"
-              whileInView="visible"
-              viewport={{ once: true, margin: "-50px" }}
-            >
-              {displayed.map((repo) => (
-                <motion.a
-                  key={repo.id}
-                  href={repo.html_url}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  variants={cardVariants}
-                  className="group relative z-10 p-6 rounded-3xl bg-card border border-border shadow-sm cursor-pointer transition-all duration-300 hover:shadow-xl hover:-translate-y-2 hover:border-blue-500/50 flex flex-col"
-                >
-                  <div className="flex justify-between items-start mb-4">
-                    <div className="p-3 rounded-lg bg-blue-500/10 text-blue-600 group-hover:bg-blue-600 group-hover:text-white transition-colors">
-                      <FolderGit2 className="w-6 h-6" />
-                    </div>
-                    <ExternalLink className="w-4 h-4 text-slate-400 opacity-0 group-hover:opacity-100 transition-opacity" />
-                  </div>
-
-                  <h4 className="font-bold text-lg leading-tight mb-2 text-slate-900 group-hover:text-blue-600 transition-colors">
-                    {repo.name}
-                  </h4>
-
-                  <p className="text-sm text-slate-600 mb-4 flex-grow line-clamp-2">
-                    {repo.description || "Tidak ada deskripsi"}
-                  </p>
-
-                  {repo.topics.length > 0 && (
-                    <div className="flex flex-wrap gap-1.5 mb-4">
-                      {repo.topics.slice(0, 4).map((topic) => (
-                        <span
-                          key={topic}
-                          className="text-xs font-medium text-blue-600 bg-blue-50 px-2 py-0.5 rounded-full"
-                        >
-                          {topic}
-                        </span>
-                      ))}
-                    </div>
-                  )}
-
-                  <div className="flex items-center gap-4 mt-auto pt-4 border-t border-slate-100">
-                    {repo.language && (
-                      <div className="flex items-center gap-1.5">
-                        <span
-                          className="w-3 h-3 rounded-full"
-                          style={{
-                            backgroundColor:
-                              LANGUAGE_COLORS[repo.language] || "#6b7280",
-                          }}
-                        />
-                        <span className="text-xs text-slate-600">
-                          {repo.language}
-                        </span>
-                      </div>
-                    )}
-                    {repo.stargazers_count > 0 && (
-                      <div className="flex items-center gap-1 text-xs text-slate-600">
-                        <Star className="w-3.5 h-3.5" />
-                        {repo.stargazers_count}
-                      </div>
-                    )}
-                    {repo.forks_count > 0 && (
-                      <div className="flex items-center gap-1 text-xs text-slate-600">
-                        <GitFork className="w-3.5 h-3.5" />
-                        {repo.forks_count}
-                      </div>
-                    )}
-                  </div>
-                </motion.a>
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 max-w-6xl mx-auto">
+              {displayed.map((repo, index) => (
+                <RepoCard key={repo.id} repo={repo} index={index} />
               ))}
-            </motion.div>
+            </div>
 
-            <div className="flex items-center justify-center mt-10">
-              <a
+            <div className="flex flex-col sm:flex-row items-center justify-center gap-4 mt-12">
+              <motion.a
                 href={PORTFOLIO_DATA.personal.github}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="group inline-flex items-center gap-3 px-6 py-3 rounded-full border border-border bg-card text-sm font-semibold text-slate-800 hover:border-blue-500/50 hover:text-blue-600 transition-all duration-300 shadow-sm hover:shadow-md"
+                whileHover={{ scale: 1.03 }}
+                whileTap={{ scale: 0.98 }}
+                className="inline-flex items-center gap-3 px-6 py-3 bg-gray-900/60 backdrop-blur-sm border border-white/10 rounded-xl text-sm font-medium text-foreground/70 hover:border-blue-500/30 hover:text-blue-400 transition-colors"
               >
-                <svg className="w-5 h-5" viewBox="0 0 24 24" fill="currentColor"><path d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0024 12c0-6.63-5.37-12-12-12z"/></svg>
+                <svg className="w-4 h-4" viewBox="0 0 24 24" fill="currentColor"><path d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0024 12c0-6.63-5.37-12-12-12z"/></svg>
                 <span>@{PORTFOLIO_DATA.personal.github.split("/").pop()}</span>
-                <span className="w-px h-4 bg-border" />
-                <span className="text-xs font-medium text-slate-500 group-hover:text-blue-500">
-                  {repos.length} Repos
-                </span>
-                <ExternalLink className="w-3.5 h-3.5 text-slate-400 group-hover:text-blue-500 transition-colors" />
-              </a>
-            </div>
+                <span className="w-px h-4 bg-white/10" />
+                <span className="text-xs text-foreground/40">{repos.length} Repos</span>
+                <ExternalLink className="w-3 h-3 text-foreground/30" />
+              </motion.a>
 
-            {repos.length > 6 && (
-              <div className="text-center mt-10">
-                <button
+              {repos.length > 6 && (
+                <motion.button
                   onClick={() => setShowAll(!showAll)}
-                  className="inline-flex items-center gap-2 px-6 py-3 rounded-full border border-border bg-card text-sm font-semibold text-slate-800 hover:border-blue-500/50 hover:text-blue-600 transition-all duration-300 shadow-sm hover:shadow-md"
+                  whileHover={{ scale: 1.03 }}
+                  whileTap={{ scale: 0.98 }}
+                  className="inline-flex items-center gap-2 px-6 py-3 bg-blue-500/10 border border-blue-500/30 rounded-xl text-sm font-medium text-blue-400 hover:bg-blue-500/20 transition-colors"
                 >
                   <Code2 className="w-4 h-4" />
-                  {showAll
-                    ? "Tampilkan Lebih Sedikit"
-                    : `Lihat Semua ${repos.length} Proyek`}
-                </button>
-              </div>
-            )}
+                  {showAll ? "Tampilkan Sedikit" : `Lihat Semua ${repos.length} Proyek`}
+                </motion.button>
+              )}
+            </div>
           </>
         )}
       </div>

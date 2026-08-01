@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" width="1024" height="1024" viewBox="0 0 1024 1024">
+  <rect width="1024" height="1024" fill="#ffffff"/>
+  <g fill="#111111">
+    <!-- Vertical stem -->
+    <path d="M380 240
+             Q380 190 430 190
+             L430 760
+             L380 810 Z"/>
+    <!-- Top bar -->
+    <path d="M430 190
+             L700 190
+             L760 190
+             L710 240
+             L430 240 Z"/>
+    <!-- Middle bar -->
+    <path d="M430 410
+             L610 410
+             L660 410
+             L610 460
+             L430 460 Z"/>
+  </g>
+</svg>

@@ -93,6 +93,12 @@
 body {
   background: var(--background);
   color: var(--foreground);
+  overflow-x: hidden;
+}
+
+html {
+  scrollbar-width: none;
+  -ms-overflow-style: none;
 }
 
 .dark {
@@ -136,6 +142,71 @@ body {
   body {
     @apply bg-background text-foreground;
   }
+}
+
+::-webkit-scrollbar {
+  display: none;
+}
+
+.dark {
+  --background: oklch(0.145 0 0);
+  --foreground: oklch(0.985 0 0);
+}
+
+.dark .bg-card {
+  background-color: oklch(0.21 0 0);
+}
+
+.dark .text-slate-900 {
+  color: oklch(0.985 0 0);
+}
+
+.dark .text-slate-800 {
+  color: oklch(0.92 0 0);
+}
+
+.dark .text-slate-700 {
+  color: oklch(0.85 0 0);
+}
+
+.dark .text-slate-600 {
+  color: oklch(0.7 0 0);
+}
+
+.dark .text-slate-500 {
+  color: oklch(0.55 0 0);
+}
+
+.dark .text-slate-400 {
+  color: oklch(0.45 0 0);
+}
+
+.dark .bg-slate-50 {
+  background-color: oklch(0.21 0 0);
+}
+
+.dark .bg-slate-100 {
+  background-color: oklch(0.26 0 0);
+}
+
+.dark .bg-slate-200 {
+  background-color: oklch(0.3 0 0);
+}
+
+.dark .bg-blue-50 {
+  background-color: oklch(0.25 0 0.05);
+}
+
+.dark .border-slate-200 {
+  border-color: oklch(1 0 0 / 15%);
+}
+
+.dark .border-slate-100 {
+  border-color: oklch(1 0 0 / 10%);
+}
+
+.dark .hover\:bg-slate-100:hover {
+  background-color: oklch(0.26 0 0);
 }
 
 .bg-noise {

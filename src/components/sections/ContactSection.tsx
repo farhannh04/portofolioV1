@@ -1,12 +1,39 @@
 "use client";
 
+import { useState } from "react";
 import { motion } from "framer-motion";
 import { PORTFOLIO_DATA } from "@/data/portfolio";
-import { Mail, Phone, MapPin, Send, Clock } from "lucide-react";
+import { Mail, Phone, MapPin, Send, Clock, CheckCircle, Loader2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
+
+const FORMSPREE_ENDPOINT = "https://formspree.io/f/YOUR_FORM_ID";
 
 export default function ContactSection() {
   const { personal } = PORTFOLIO_DATA;
+  const [formData, setFormData] = useState({ name: "", email: "", message: "" });
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [isSubmitted, setIsSubmitted] = useState(false);
+
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setIsSubmitting(true);
+
+    try {
+      const response = await fetch(FORMSPREE_ENDPOINT, {
+        method: "POST",
+        headers: { "Content-Type": "application/json", Accept: "application/json" },
+        body: JSON.stringify(formData),
+      });
+
+      if (response.ok) {
+        setIsSubmitted(true);
+        setFormData({ name: "", email: "", message: "" });
+      }
+    } catch {
+    } finally {
+      setIsSubmitting(false);
+    }
+  };
 
   return (
     <section id="contact" className="py-24 bg-muted/30 relative z-10">
@@ -91,42 +118,76 @@ export default function ContactSection() {
             transition={{ duration: 0.6 }}
             viewport={{ once: true, margin: "-50px" }}
           >
-            <form className="space-y-6" onSubmit={(e) => e.preventDefault()}>
-              <div className="space-y-2">
-                <label htmlFor="name" className="text-sm font-medium text-foreground">Nama Lengkap</label>
-                <input 
-                  id="name" 
-                  type="text" 
-                  placeholder="Masukkan nama Anda" 
-                  className="w-full px-4 py-3 rounded-lg border border-border bg-background text-foreground focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all"
-                />
+            {isSubmitted ? (
+              <div className="flex flex-col items-center justify-center py-12 text-center">
+                <div className="w-16 h-16 rounded-full bg-green-100 dark:bg-green-900 flex items-center justify-center mb-4">
+                  <CheckCircle className="w-8 h-8 text-green-600 dark:text-green-400" />
+                </div>
+                <h3 className="text-xl font-bold text-foreground mb-2">Pesan Terkirim!</h3>
+                <p className="text-muted-foreground mb-6">Terima kasih telah menghubungi. Saya akan merespons segera.</p>
+                <Button variant="outline" onClick={() => setIsSubmitted(false)}>
+                  Kirim Pesan Lagi
+                </Button>
               </div>
-              
-              <div className="space-y-2">
-                <label htmlFor="email" className="text-sm font-medium text-foreground">Email</label>
-                <input 
-                  id="email" 
-                  type="email" 
-                  placeholder="nama@email.com" 
-                  className="w-full px-4 py-3 rounded-lg border border-border bg-background text-foreground focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all"
-                />
-              </div>
+            ) : (
+              <form className="space-y-6" onSubmit={handleSubmit}>
+                <div className="space-y-2">
+                  <label htmlFor="name" className="text-sm font-medium text-foreground">Nama Lengkap</label>
+                  <input 
+                    id="name" 
+                    type="text" 
+                    value={formData.name}
+                    onChange={(e) => setFormData({ ...formData, name: e.target.value })}
+                    placeholder="Masukkan nama Anda" 
+                    required
+                    className="w-full px-4 py-3 rounded-lg border border-border bg-background text-foreground focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all"
+                  />
+                </div>
+                
+                <div className="space-y-2">
+                  <label htmlFor="email" className="text-sm font-medium text-foreground">Email</label>
+                  <input 
+                    id="email" 
+                    type="email" 
+                    value={formData.email}
+                    onChange={(e) => setFormData({ ...formData, email: e.target.value })}
+                    placeholder="nama@email.com" 
+                    required
+                    className="w-full px-4 py-3 rounded-lg border border-border bg-background text-foreground focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all"
+                  />
+                </div>
 
-              <div className="space-y-2">
-                <label htmlFor="message" className="text-sm font-medium text-foreground">Pesan</label>
-                <textarea 
-                  id="message" 
-                  rows={4} 
-                  placeholder="Tulis pesan Anda di sini..." 
-                  className="w-full px-4 py-3 rounded-lg border border-border bg-background text-foreground focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all resize-none"
-                />
-              </div>
+                <div className="space-y-2">
+                  <label htmlFor="message" className="text-sm font-medium text-foreground">Pesan</label>
+                  <textarea 
+                    id="message" 
+                    rows={4} 
+                    value={formData.message}
+                    onChange={(e) => setFormData({ ...formData, message: e.target.value })}
+                    placeholder="Tulis pesan Anda di sini..." 
+                    required
+                    className="w-full px-4 py-3 rounded-lg border border-border bg-background text-foreground focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all resize-none"
+                  />
+                </div>
 
-              <Button type="button" className="w-full h-12 text-base group">
-                Kirim Pesan
-                <Send className="w-4 h-4 ml-2 group-hover:translate-x-1 group-hover:-translate-y-1 transition-transform" />
-              </Button>
-            </form>
+                <Button type="submit" className="w-full h-12 text-base group" disabled={isSubmitting}>
+                  {isSubmitting ? (
+                    <>
+                      <Loader2 className="w-4 h-4 mr-2 animate-spin" />
+                      Mengirim...
+                    </>
+                  ) : (
+                    <>
+                      Kirim Pesan
+                      <Send className="w-4 h-4 ml-2 group-hover:translate-x-1 group-hover:-translate-y-1 transition-transform" />
+                    </>
+                  )}
+                </Button>
+                <p className="text-xs text-muted-foreground text-center">
+                  Atau hubungi langsung via WhatsApp: <a href={`https://wa.me/${personal.phone.replace(/[^0-9]/g, '')}`} className="text-blue-500 hover:underline">klik di sini</a>
+                </p>
+              </form>
+            )}
           </motion.div>
 
         </div>

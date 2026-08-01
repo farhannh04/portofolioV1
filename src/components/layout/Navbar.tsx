@@ -1,11 +1,13 @@
 "use client";
 
 import { useState, useEffect } from "react";
+import dynamic from "next/dynamic";
 import Link from "next/link";
 import { Menu, X, Download } from "lucide-react";
 import { PORTFOLIO_DATA } from "@/data/portfolio";
-import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
+
+const CvModal = dynamic(() => import("@/components/shared/CvModal"), { ssr: false });
 
 const NAV_LINKS = [
   { name: "Beranda", href: "#home" },
@@ -20,6 +22,18 @@ const NAV_LINKS = [
 export default function Navbar() {
   const [isScrolled, setIsScrolled] = useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+  const [isCvOpen, setIsCvOpen] = useState(false);
+
+  const openCv = () => {
+    setIsMobileMenuOpen(false);
+    setIsCvOpen(true);
+    document.body.style.overflow = "hidden";
+  };
+
+  const closeCv = () => {
+    setIsCvOpen(false);
+    document.body.style.overflow = "unset";
+  };
 
   useEffect(() => {
     const handleScroll = () => {
@@ -57,12 +71,13 @@ export default function Navbar() {
             </Link>
           ))}
           
-          <Button asChild size="sm" className="ml-4">
-            <a href="/cv-farhan.pdf" download>
-              <Download className="mr-2 h-4 w-4" />
-              Unduh CV
-            </a>
-          </Button>
+          <button
+            onClick={openCv}
+            className="ml-4 inline-flex items-center gap-2 h-7 px-2.5 text-sm font-medium rounded-md bg-primary text-primary-foreground hover:bg-primary/80 transition-colors"
+          >
+            <Download className="h-4 w-4" />
+            Lihat CV
+          </button>
         </nav>
 
         {/* Mobile Menu Toggle */}
@@ -88,14 +103,16 @@ export default function Navbar() {
               {link.name}
             </Link>
           ))}
-          <Button asChild className="w-full mt-2">
-            <a href="/cv-farhan.pdf" download>
-              <Download className="mr-2 h-4 w-4" />
-              Unduh CV
-            </a>
-          </Button>
+          <button
+            onClick={openCv}
+            className="w-full mt-2 inline-flex items-center justify-center gap-2 h-9 px-4 text-sm font-medium rounded-md bg-primary text-primary-foreground hover:bg-primary/80 transition-colors"
+          >
+            <Download className="h-4 w-4" />
+            Lihat CV
+          </button>
         </div>
       )}
+      {isCvOpen && <CvModal file="/CV.pdf" onClose={closeCv} />}
     </header>
   );
 }

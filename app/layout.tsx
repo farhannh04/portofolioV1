@@ -18,6 +18,13 @@ const geistMono = Geist_Mono({
 export const metadata: Metadata = {
   title: `${PORTFOLIO_DATA.personal.shortName} | Portfolio`,
   description: PORTFOLIO_DATA.personal.description,
+  keywords: ["portfolio", "web developer", "farhan", "programmer"],
+  authors: [{ name: PORTFOLIO_DATA.personal.name }],
+  openGraph: {
+    title: `${PORTFOLIO_DATA.personal.shortName} | Portfolio`,
+    description: PORTFOLIO_DATA.personal.description,
+    type: "website",
+  },
 };
 
 export default function RootLayout({
@@ -27,9 +34,14 @@ export default function RootLayout({
 }>) {
   return (
     <html
-      lang="en"
+      lang="id"
       className={`${geistSans.variable} ${geistMono.variable} h-full antialiased scroll-smooth`}
     >
+      <head>
+        <link rel="preconnect" href="https://fonts.googleapis.com" />
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
+        <link rel="icon" href="/favicon.ico" />
+      </head>
       <body className="min-h-screen bg-background text-foreground font-sans">
         {children}
       </body>

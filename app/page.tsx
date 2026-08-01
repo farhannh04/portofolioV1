@@ -10,7 +10,6 @@ import Preloader from "@/components/shared/Preloader";
 import HeroSection from "@/components/sections/HeroSection";
 import AboutSection from "@/components/sections/AboutSection";
 
-const CustomCursor = dynamic(() => import("@/components/shared/CustomCursor"), { ssr: false });
 const ParticleNetwork = dynamic(() => import("@/components/shared/ParticleNetwork"), { ssr: false });
 const ExperienceSection = dynamic(() => import("@/components/sections/ExperienceSection"));
 const TechStackSection = dynamic(() => import("@/components/sections/TechStackSection"));
@@ -23,53 +22,41 @@ const ContactSection = dynamic(() => import("@/components/sections/ContactSectio
 export default function Home() {
   const [isLoading, setIsLoading] = useState(true);
 
-  // Mencegah scroll selama loading
   useEffect(() => {
-    if (isLoading) {
-      document.body.style.overflow = "hidden";
-    } else {
-      document.body.style.overflow = "unset";
+    if (!isLoading) {
+      document.body.style.overflow = "";
     }
   }, [isLoading]);
 
   return (
     <>
-      <CustomCursor />
-      
       <AnimatePresence mode="wait">
         {isLoading && <Preloader onComplete={() => setIsLoading(false)} />}
       </AnimatePresence>
 
-      <SmoothScroll>
-        <div className="flex flex-col min-h-screen relative z-10 overflow-hidden">
-          
-          {/* Animasi Jaringan Partikel (Konstelasi) di render 1 kali saja di global background */}
-          <div className="fixed inset-0 z-[-1] pointer-events-none bg-background">
-            <ParticleNetwork id="tsparticles-main" />
-          </div>
-          
-          {/* Konten Halaman tidak dimuat sampai loading selesai untuk kebersihan layar */}
-          {!isLoading && (
-            <>
-              <Navbar />
-              
-              <main className="flex-1 w-full flex flex-col relative z-10">
-                <HeroSection />
-                <AboutSection />
-                <ExperienceSection />
-                <TechStackSection />
-                <EducationSection />
-                <CertificationsSection />
-                <ProjectsSection />
-                <SkillsSection />
-                <ContactSection />
-              </main>
+      <div className="fixed inset-0 z-[-1] pointer-events-none bg-background">
+        <ParticleNetwork />
+      </div>
 
-              <Footer />
-            </>
-          )}
-        </div>
-      </SmoothScroll>
+      {!isLoading && (
+        <SmoothScroll>
+          <Navbar />
+          
+          <main className="flex-1 w-full flex flex-col relative z-10">
+            <HeroSection />
+            <AboutSection />
+            <ExperienceSection />
+            <TechStackSection />
+            <EducationSection />
+            <CertificationsSection />
+            <ProjectsSection />
+            <SkillsSection />
+            <ContactSection />
+          </main>
+
+          <Footer />
+        </SmoothScroll>
+      )}
     </>
   );
 }

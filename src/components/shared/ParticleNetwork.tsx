@@ -1,110 +1,12 @@
 "use client";
 
-import { Particles, ParticlesProvider } from "@tsparticles/react";
-import { loadSlim } from "@tsparticles/slim";
-import type { Engine } from "@tsparticles/engine";
-
-async function particlesInit(engine: Engine) {
-  await loadSlim(engine);
-}
-
-function ParticleCanvas({ id }: { id: string }) {
-  if (typeof window !== "undefined" && window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
-    return null;
-  }
-
+export default function ParticleNetwork() {
   return (
-    <Particles
-      id={id}
-      options={{
-        fullScreen: { enable: false, zIndex: 0 },
-        background: {
-          color: {
-            value: "transparent",
-          },
-        },
-        fpsLimit: 60,
-        interactivity: {
-          events: {
-            onHover: {
-              enable: true,
-              mode: ["grab", "bubble"],
-            },
-            onClick: {
-              enable: true,
-              mode: "push",
-            },
-          },
-          modes: {
-            grab: {
-              distance: 180,
-              links: {
-                opacity: 0.8,
-              },
-            },
-            bubble: {
-              distance: 200,
-              size: 6,
-              duration: 0.4,
-              opacity: 1,
-            },
-            push: {
-              quantity: 3,
-            },
-          },
-        },
-        particles: {
-          color: {
-            value: "#3b82f6",
-          },
-          links: {
-            color: "#3b82f6",
-            distance: 150,
-            enable: true,
-            opacity: 0.3,
-            width: 1,
-          },
-          move: {
-            direction: "none",
-            enable: true,
-            outModes: {
-              default: "out",
-            },
-            random: true,
-            speed: 0.2, // Dikurangi agar lebih smooth
-            straight: false,
-          },
-          number: {
-            density: {
-              enable: true,
-              height: 800,
-              width: 800,
-            },
-            value: typeof window !== "undefined" && window.innerWidth < 768 ? 15 : 30, // Lebih sedikit di HP
-          },
-          opacity: {
-            value: 0.4,
-          },
-          shape: {
-            type: "circle",
-          },
-          size: {
-            value: { min: 1, max: 2 },
-          },
-        },
-        detectRetina: true,
-      }}
-      className="w-full h-full"
-    />
-  );
-}
-
-export default function ParticleNetwork({ id = "tsparticles" }: { id?: string }) {
-  return (
-    <div className="absolute inset-0 z-[-1] pointer-events-none">
-      <ParticlesProvider init={particlesInit}>
-        <ParticleCanvas id={id} />
-      </ParticlesProvider>
+    <div className="absolute inset-0 z-[-1] pointer-events-none overflow-hidden">
+      <div className="absolute inset-0 bg-gradient-to-br from-blue-500/5 via-transparent to-cyan-500/5" />
+      <div className="absolute top-1/4 left-1/4 w-96 h-96 bg-blue-500/10 rounded-full blur-3xl animate-pulse" />
+      <div className="absolute bottom-1/4 right-1/4 w-80 h-80 bg-cyan-500/10 rounded-full blur-3xl animate-pulse" style={{ animationDelay: "1s" }} />
+      <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] bg-blue-500/5 rounded-full blur-3xl" />
     </div>
   );
 }

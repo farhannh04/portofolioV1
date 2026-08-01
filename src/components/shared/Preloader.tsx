@@ -3,7 +3,6 @@
 import { useEffect } from "react";
 import { motion } from "framer-motion";
 import { PORTFOLIO_DATA } from "@/data/portfolio";
-import ParticleNetwork from "./ParticleNetwork";
 
 export default function Preloader({ onComplete }: { onComplete: () => void }) {
   useEffect(() => {
