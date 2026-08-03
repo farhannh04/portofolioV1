@@ -3,36 +3,22 @@
 import { useState } from "react";
 import { motion } from "framer-motion";
 import { PORTFOLIO_DATA } from "@/data/portfolio";
-import { Mail, Phone, MapPin, Send, Clock, CheckCircle, Loader2 } from "lucide-react";
+import { Mail, Phone, MapPin, Clock, Send } from "lucide-react";
 import { Button } from "@/components/ui/button";
-
-const FORMSPREE_ENDPOINT = "https://formspree.io/f/YOUR_FORM_ID";
 
 export default function ContactSection() {
   const { personal } = PORTFOLIO_DATA;
   const [formData, setFormData] = useState({ name: "", email: "", message: "" });
-  const [isSubmitting, setIsSubmitting] = useState(false);
-  const [isSubmitted, setIsSubmitted] = useState(false);
+  const [isSent, setIsSent] = useState(false);
 
-  const handleSubmit = async (e: React.FormEvent) => {
+  const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    setIsSubmitting(true);
-
-    try {
-      const response = await fetch(FORMSPREE_ENDPOINT, {
-        method: "POST",
-        headers: { "Content-Type": "application/json", Accept: "application/json" },
-        body: JSON.stringify(formData),
-      });
-
-      if (response.ok) {
-        setIsSubmitted(true);
-        setFormData({ name: "", email: "", message: "" });
-      }
-    } catch {
-    } finally {
-      setIsSubmitting(false);
-    }
+    const subject = encodeURIComponent(`[Portofolio] Pesan dari ${formData.name}`);
+    const body = encodeURIComponent(
+      `Halo Farhan,\n\nNama: ${formData.name}\nEmail: ${formData.email}\n\n${formData.message}\n`
+    );
+    window.location.href = `mailto:${personal.email}?subject=${subject}&body=${body}`;
+    setIsSent(true);
   };
 
   return (
@@ -110,7 +96,7 @@ export default function ContactSection() {
             </div>
           </motion.div>
 
-          {/* Form Kontak (UI Alternatif) */}
+          {/* Form Kontak */}
           <motion.div
             className="p-8 rounded-2xl border border-border bg-background shadow-lg relative z-10"
             initial={{ opacity: 0, x: 30 }}
@@ -118,40 +104,48 @@ export default function ContactSection() {
             transition={{ duration: 0.6 }}
             viewport={{ once: true, margin: "-50px" }}
           >
-            {isSubmitted ? (
+            {isSent ? (
               <div className="flex flex-col items-center justify-center py-12 text-center">
-                <div className="w-16 h-16 rounded-full bg-green-100 dark:bg-green-900 flex items-center justify-center mb-4">
-                  <CheckCircle className="w-8 h-8 text-green-600 dark:text-green-400" />
+                <div className="flex items-center justify-center w-16 h-16 rounded-full bg-blue-500/10 text-blue-500 mb-6">
+                  <Mail className="w-8 h-8" />
                 </div>
-                <h3 className="text-xl font-bold text-foreground mb-2">Pesan Terkirim!</h3>
-                <p className="text-muted-foreground mb-6">Terima kasih telah menghubungi. Saya akan merespons segera.</p>
-                <Button variant="outline" onClick={() => setIsSubmitted(false)}>
-                  Kirim Pesan Lagi
+                <h3 className="text-xl font-bold text-foreground mb-3">Email Dibuka!</h3>
+                <p className="text-muted-foreground mb-2">
+                  Aplikasi email Anda seharusnya sudah terbuka dengan pesan terisi.
+                </p>
+                <p className="text-sm text-muted-foreground mb-6">
+                  Kirim email tersebut ke{" "}
+                  <a href={`mailto:${personal.email}`} className="text-blue-500 hover:underline">
+                    {personal.email}
+                  </a>
+                </p>
+                <Button variant="outline" onClick={() => setIsSent(false)}>
+                  Tulis Pesan Baru
                 </Button>
               </div>
             ) : (
               <form className="space-y-6" onSubmit={handleSubmit}>
                 <div className="space-y-2">
                   <label htmlFor="name" className="text-sm font-medium text-foreground">Nama Lengkap</label>
-                  <input 
-                    id="name" 
-                    type="text" 
+                  <input
+                    id="name"
+                    type="text"
                     value={formData.name}
                     onChange={(e) => setFormData({ ...formData, name: e.target.value })}
-                    placeholder="Masukkan nama Anda" 
+                    placeholder="Masukkan nama Anda"
                     required
                     className="w-full px-4 py-3 rounded-lg border border-border bg-background text-foreground focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all"
                   />
                 </div>
-                
+
                 <div className="space-y-2">
                   <label htmlFor="email" className="text-sm font-medium text-foreground">Email</label>
-                  <input 
-                    id="email" 
-                    type="email" 
+                  <input
+                    id="email"
+                    type="email"
                     value={formData.email}
                     onChange={(e) => setFormData({ ...formData, email: e.target.value })}
-                    placeholder="nama@email.com" 
+                    placeholder="nama@email.com"
                     required
                     className="w-full px-4 py-3 rounded-lg border border-border bg-background text-foreground focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all"
                   />
@@ -159,32 +153,31 @@ export default function ContactSection() {
 
                 <div className="space-y-2">
                   <label htmlFor="message" className="text-sm font-medium text-foreground">Pesan</label>
-                  <textarea 
-                    id="message" 
-                    rows={4} 
+                  <textarea
+                    id="message"
+                    rows={4}
                     value={formData.message}
                     onChange={(e) => setFormData({ ...formData, message: e.target.value })}
-                    placeholder="Tulis pesan Anda di sini..." 
+                    placeholder="Tulis pesan Anda di sini..."
                     required
                     className="w-full px-4 py-3 rounded-lg border border-border bg-background text-foreground focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all resize-none"
                   />
                 </div>
 
-                <Button type="submit" className="w-full h-12 text-base group" disabled={isSubmitting}>
-                  {isSubmitting ? (
-                    <>
-                      <Loader2 className="w-4 h-4 mr-2 animate-spin" />
-                      Mengirim...
-                    </>
-                  ) : (
-                    <>
-                      Kirim Pesan
-                      <Send className="w-4 h-4 ml-2 group-hover:translate-x-1 group-hover:-translate-y-1 transition-transform" />
-                    </>
-                  )}
+                <Button type="submit" className="w-full h-12 text-base group">
+                  Kirim Pesan
+                  <Send className="w-4 h-4 ml-2 group-hover:translate-x-1 group-hover:-translate-y-1 transition-transform" />
                 </Button>
                 <p className="text-xs text-muted-foreground text-center">
-                  Atau hubungi langsung via WhatsApp: <a href={`https://wa.me/${personal.phone.replace(/[^0-9]/g, '')}`} className="text-blue-500 hover:underline">klik di sini</a>
+                  Atau hubungi langsung via{" "}
+                  <a
+                    href={`https://wa.me/${personal.phone.replace(/[^0-9]/g, "")}`}
+                    target="_blank"
+                    rel="noreferrer"
+                    className="text-blue-500 hover:underline"
+                  >
+                    WhatsApp
+                  </a>
                 </p>
               </form>
             )}

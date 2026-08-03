@@ -4,17 +4,7 @@ import type { GitHubRepo } from "@/data/types";
 const GITHUB_USERNAME = "farhannh04";
 const GITHUB_API = `https://api.github.com/users/${GITHUB_USERNAME}/repos`;
 
-let cachedData: GitHubRepo[] | null = null;
-let cacheTimestamp = 0;
-const CACHE_DURATION = 60 * 60 * 1000;
-
 export async function GET() {
-  const now = Date.now();
-
-  if (cachedData && now - cacheTimestamp < CACHE_DURATION) {
-    return NextResponse.json(cachedData);
-  }
-
   try {
     const res = await fetch(
       `${GITHUB_API}?sort=updated&per_page=100&type=owner`,
@@ -28,7 +18,6 @@ export async function GET() {
     );
 
     if (!res.ok) {
-      if (cachedData) return NextResponse.json(cachedData);
       return NextResponse.json([], { status: res.status });
     }
 
@@ -50,12 +39,8 @@ export async function GET() {
         fork: repo.fork,
       }));
 
-    cachedData = filtered;
-    cacheTimestamp = now;
-
     return NextResponse.json(filtered);
   } catch {
-    if (cachedData) return NextResponse.json(cachedData);
     return NextResponse.json([], { status: 500 });
   }
 }

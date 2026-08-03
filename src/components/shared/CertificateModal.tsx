@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useCallback, useEffect, useRef } from "react";
+import Image from "next/image";
 import { motion } from "framer-motion";
 import { Document, Page, pdfjs } from "react-pdf";
 import "react-pdf/dist/Page/AnnotationLayer.css";
@@ -136,11 +137,15 @@ export default function CertificateModal({ cert, onClose }: CertModalProps) {
 
         <div ref={containerRef} className="flex-1 overflow-auto p-4 flex items-start justify-center bg-slate-50 dark:bg-slate-900">
           {isImage(cert.file) ? (
-            <img
-              src={cert.file}
-              alt={cert.title}
-              className="max-w-full h-auto rounded-lg"
-            />
+            <div className="relative w-full h-[70vh]">
+              <Image
+                src={cert.file}
+                alt={cert.title}
+                fill
+                className="object-contain rounded-lg"
+                sizes="(max-width: 768px) 100vw, 768px"
+              />
+            </div>
           ) : error ? (
             <div className="flex flex-col items-center justify-center py-20 gap-4">
               <p className="text-slate-600">Gagal memuat dokumen</p>

@@ -9,6 +9,7 @@ export const PORTFOLIO_DATA = {
     location: "Jakarta Utara, DKI Jakarta, 14420",
     linkedin: "https://linkedin.com/in/mfarhannurhidayat",
     github: "https://github.com/farhannh04",
+    instagram: "https://www.instagram.com/farhannh_/",
   },
   about: {
     title: "Tentang Saya",

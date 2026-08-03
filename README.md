@@ -8,9 +8,7 @@ Portofolio web modern, interaktif, dan berkinerja tinggi yang dibangun menggunak
 - **🐙 Integrasi GitHub Dinamis**: Menarik data repositori publik secara otomatis dari GitHub API. Menggunakan sistem *Server-Side Fetching* dengan *Caching* 1 jam dari Next.js untuk mencegah terkena limitasi (*rate limit*) API GitHub.
 - **✨ Animasi & Interaksi Modern**: 
   - Transisi halaman dan elemen yang mulus dengan **Framer Motion**.
-  - Background konstelasi interaktif dengan **TS Particles**.
-  - Kursor kustom modern yang beradaptasi dengan elemen yang dapat diklik (*mix-blend-mode*).
-- **📜 Smooth Scrolling**: Pengalaman scrolling *butter-smooth* menggunakan **Lenis**.
+  - Efek background gradient & glow murni CSS (tanpa library partikel).
 - **📄 Penampil PDF Bawaan**: Melihat sertifikat (PDF) secara langsung di dalam modal tanpa perlu mengunduhnya (menggunakan `react-pdf`).
 - **📱 Responsif Penuh**: Tampilan yang menyesuaikan dengan sempurna mulai dari layar HP hingga Desktop ultra-lebar. (Animasi berat dinonaktifkan otomatis di mobile untuk menghemat baterai).
 
@@ -23,9 +21,7 @@ Portofolio web modern, interaktif, dan berkinerja tinggi yang dibangun menggunak
 - **Styling**: [Tailwind CSS v4](https://tailwindcss.com/) & shadcn/ui
 - **Animasi**: [Framer Motion](https://www.framer.com/motion/)
 - **Ikon**: [Lucide React](https://lucide.dev/)
-- **Scroll Engine**: [Lenis](https://lenis.studiofreight.com/)
 - **Renderer PDF**: [React-PDF](https://github.com/wojtekmaj/react-pdf)
-- **Partikel**: [TS Particles](https://particles.js.org/)
 - **Package Manager**: [pnpm](https://pnpm.io/)
 
 ---
@@ -46,7 +42,7 @@ Portofolio web modern, interaktif, dan berkinerja tinggi yang dibangun menggunak
 │   ├── components/
 │   │   ├── layout/           # Navbar & Footer
 │   │   ├── sections/         # Bagian per bagian website (Hero, About, Projects, dll)
-│   │   ├── shared/           # Komponen reusable (Cursor, Preloader, Modal PDF, SmoothScroll)
+│   │   ├── shared/           # Komponen reusable (Modal PDF, Preloader, SmoothScroll)
 │   │   └── ui/               # Komponen dasar (seperti Button dari shadcn)
 │   ├── data/
 │   │   ├── portfolio.ts      # 🗄️ DATABASE LOKAL: Edit data teks portofolio di sini!

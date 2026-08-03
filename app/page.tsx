@@ -23,9 +23,7 @@ export default function Home() {
   const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
-    if (!isLoading) {
-      document.body.style.overflow = "";
-    }
+    document.body.style.overflow = isLoading ? "hidden" : "";
   }, [isLoading]);
 
   return (

@@ -1,5 +1,5 @@
 import { PORTFOLIO_DATA } from "@/data/portfolio";
-import { Mail, MapPin, Phone, ArrowUpRight } from "lucide-react";
+import { ArrowUpRight } from "lucide-react";
 
 const GithubIcon = ({ className }: { className?: string }) => (
   <svg className={className} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
@@ -12,6 +12,14 @@ const LinkedinIcon = ({ className }: { className?: string }) => (
     <path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-2-2 2 2 0 0 0-2 2v7h-4v-7a6 6 0 0 1 6-6z"></path>
     <rect x="2" y="9" width="4" height="12"></rect>
     <circle cx="4" cy="4" r="2"></circle>
+  </svg>
+);
+
+const InstagramIcon = ({ className }: { className?: string }) => (
+  <svg className={className} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+    <rect width="20" height="20" x="2" y="2" rx="5" ry="5"></rect>
+    <path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"></path>
+    <line x1="17.5" x2="17.51" y1="6.5" y2="6.5"></line>
   </svg>
 );
 
@@ -53,6 +61,9 @@ export default function Footer() {
               </a>
               <a href={personal.linkedin} target="_blank" rel="noreferrer" className="w-14 h-14 rounded-full border border-border flex items-center justify-center text-foreground hover:bg-blue-600 hover:text-white hover:border-blue-600 transition-all duration-300 shadow-sm hover:shadow-lg hover:-translate-y-1">
                 <LinkedinIcon className="w-6 h-6" />
+              </a>
+              <a href={personal.instagram} target="_blank" rel="noreferrer" className="w-14 h-14 rounded-full border border-border flex items-center justify-center text-foreground hover:bg-blue-600 hover:text-white hover:border-blue-600 transition-all duration-300 shadow-sm hover:shadow-lg hover:-translate-y-1">
+                <InstagramIcon className="w-6 h-6" />
               </a>
             </div>
           </div>

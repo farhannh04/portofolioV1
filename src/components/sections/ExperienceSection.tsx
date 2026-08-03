@@ -8,8 +8,8 @@ export default function ExperienceSection() {
   const { experience } = PORTFOLIO_DATA;
 
   // Filter data berdasarkan tipe
-  const workExperience = experience.filter((item: any) => item.type === "work");
-  const orgExperience = experience.filter((item: any) => item.type === "organization");
+  const workExperience = experience.filter((item) => item.type === "work");
+  const orgExperience = experience.filter((item) => item.type === "organization");
 
   const containerVariants = {
     hidden: { opacity: 0 },
@@ -52,7 +52,7 @@ export default function ExperienceSection() {
             </div>
             
             <div className="space-y-8 relative before:absolute before:inset-0 before:ml-5 before:-translate-x-px md:before:mx-auto md:before:translate-x-0 before:h-full before:w-0.5 before:bg-gradient-to-b before:from-transparent before:via-border before:to-transparent">
-              {workExperience.map((item: any) => (
+              {workExperience.map((item) => (
                 <motion.div key={item.id} variants={itemVariants} className="relative flex items-center justify-between md:justify-normal md:odd:flex-row-reverse group is-active">
                   <div className="flex items-center justify-center w-10 h-10 rounded-full border border-border bg-background shadow shrink-0 md:order-1 md:group-odd:-translate-x-1/2 md:group-even:translate-x-1/2 z-10">
                      <div className="w-2.5 h-2.5 bg-blue-500 rounded-full"></div>
@@ -88,7 +88,7 @@ export default function ExperienceSection() {
             </div>
             
             <div className="space-y-8 relative before:absolute before:inset-0 before:ml-5 before:-translate-x-px md:before:mx-auto md:before:translate-x-0 before:h-full before:w-0.5 before:bg-gradient-to-b before:from-transparent before:via-border before:to-transparent">
-              {orgExperience.map((item: any) => (
+              {orgExperience.map((item) => (
                 <motion.div key={item.id} variants={itemVariants} className="relative flex items-center justify-between md:justify-normal md:odd:flex-row-reverse group is-active">
                   <div className="flex items-center justify-center w-10 h-10 rounded-full border border-border bg-background shadow shrink-0 md:order-1 md:group-odd:-translate-x-1/2 md:group-even:translate-x-1/2 z-10">
                      <div className="w-2.5 h-2.5 bg-blue-500 rounded-full"></div>
